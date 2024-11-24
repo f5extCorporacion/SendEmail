@@ -1,7 +1,7 @@
 {
   "name": "SendEmailhoy",
   "version": "2",
-  "description": "",
+  "description": "desarrollo de backend prueba con vercel",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
