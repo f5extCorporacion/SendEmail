@@ -1,12 +1,11 @@
 {
   "name": "sendemail",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "desarrollo de backend prueba con vercel",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "dev":"node index.js",
+     "start": "node index.js",
+     "vercel-start": "node index.js"
   },
   "keywords": [],
   "author": "",
