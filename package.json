@@ -1,6 +1,6 @@
 {
   "name": "SendEmailhoy",
-  "version": "2",
+  "version": "2.0.0",
   "description": "desarrollo de backend prueba con vercel",
   "main": "index.js",
   "scripts": {
