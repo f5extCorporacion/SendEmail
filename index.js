@@ -65,7 +65,8 @@ function midelware2(req, res, next) {
     }
 
     main().catch(console.error);
-    console.log(req.body.nombre);
+    res.status(200).json({ mensaje: info });
+    
   } else {
     res.status(400).json({ mensaje: "nombre no valido" });
   }
