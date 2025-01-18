@@ -9,10 +9,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.get("/", midelware1, (req, res) => {
+app.get("/",  (req, res, next) => {
   res.status(200).json({ mensaje: "bienvenidos" });
 });
-app.post("/send", midelware2, (req, res) => {
+app.post("/send", midelware2, (req, res, next) => {
   const { nombre, email, telefono, password } = req.body;
   res.status(200).json({ result: req.body });
 });
