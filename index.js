@@ -34,7 +34,7 @@ function midelware2(req, res, next) {
     secure: false, // true para puerto 465, false para otros puertos
     auth: {
       user: "1107050440f@gmail.com",
-      pass: "mlycaomevnfnanbp",
+      pass: "pxmuzwuekjpkpfvh",
     },
   });
 
