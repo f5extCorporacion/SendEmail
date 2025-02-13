@@ -72,7 +72,7 @@ La API proporciona dos endpoints:
     {
     "message": "Correo enviado con éxito",
     "result": {
-    // ... detalles del envío ...
+    enviado
     }
     }
     ```
