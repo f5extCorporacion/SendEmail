@@ -1,74 +1,82 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
+
 const app = express();
-const port = 3000;
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Inicializar SQLite
+// SQLite
 require("./db");
+
+// Rutas
 app.use("/contactos", require("./routes/lista"));
 
-app.get("/",  (req, res, next) => {
-  res.status(200).json({ mensaje: "bienvenidos" });
-});
-app.post("/send", async (req, res) => {
-  const { nombre, email, telefono, password } = req.body;
-
-  // Validar que los datos necesarios estén presentes
-  if (!nombre || !email || !password) {
-    return res.status(400).json({ error: "Todos los campos son requeridos." });
-  }
-
-  // Configurar el transporte de Nodemailer
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com", // Cambia a tu proveedor SMTP
-    port: 587, // Cambia el puerto si es necesario
-    secure: false, // true para puerto 465, false para otros puertos
-    auth: {
-      user: "1107050440f@gmail.com", // Asegúrate de usar un correo válido
-      pass: "pxmuzwuekjpkpfvh", // Asegúrate de usar una contraseña válida
-    },
+app.get("/", (req, res) => {
+  res.status(200).json({
+    mensaje: "bienvenidos"
   });
+});
 
+app.post("/send", async (req, res) => {
   try {
-    if (nombre === "franklim") {
-      // Enviar correo con Nodemailer
-      const info = await transporter.sendMail({
-        from: '"Portafolio Franklim 👻" <maddison53@ethereal.email>', // Dirección del remitente
-        to: email, // Dirección del destinatario
-        subject: "Bienvenidos a nuestra web ✔", // Asunto del correo
-        text: `Hello ${nombre}`, // Texto plano
-        html: `
-          <div>
-            <p>Datos de Usuario Sr. ${nombre} :</p>
-            <ul>
-              <li>Email: ${email}</li>
-              <li>Password: ${password}</li>
-            </ul>
-            <img src="https://cdn-icons-png.flaticon.com/512/2343/2343805.png" width="150px" />
-          </div>
-        `, // Cuerpo del correo en HTML
+    const { nombre, email, telefono, password } = req.body;
+
+    if (!nombre || !email || !password) {
+      return res.status(400).json({
+        error: "Todos los campos son requeridos."
       });
-
-      console.log("Message sent: %s", info.messageId);
-
-      return res.status(200).json({ message: "Correo enviado con éxito", result: info });
-    } else {
-      return res.status(400).json({ error: "El nombre no es válido." });
     }
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    const info = await transporter.sendMail({
+      from: `"Portafolio Franklim 👻" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Bienvenidos a nuestra web ✔",
+      html: `
+        <div>
+          <p>Datos de Usuario Sr. ${nombre}</p>
+          <ul>
+            <li>Email: ${email}</li>
+            <li>Teléfono: ${telefono || ""}</li>
+          </ul>
+        </div>
+      `
+    });
+
+    return res.json({
+      ok: true,
+      messageId: info.messageId
+    });
+
   } catch (error) {
-    console.error("Error al enviar el correo:", error);
-    return res.status(500).json({ error: "Error al enviar el correo." });
+    console.error(error);
+
+    return res.status(500).json({
+      error: error.message
+    });
   }
 });
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
 
+// LOCAL
+if (process.env.NODE_ENV !== "production") {
+  const port = process.env.PORT || 3000;
 
+  app.listen(port, () => {
+    console.log(`Servidor ejecutándose en ${port}`);
+  });
+}
 
-
+// VERCEL
+module.exports = app;
