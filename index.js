@@ -3,11 +3,14 @@ const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const app = express();
 const port = 3000;
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
 
-// parse application/json
+// Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// Inicializar SQLite
+require("./db");
+app.use("/contactos", require("./routes/lista"));
 
 app.get("/",  (req, res, next) => {
   res.status(200).json({ mensaje: "bienvenidos" });
@@ -65,6 +68,7 @@ app.post("/send", async (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+exports.default = app;
 
 
 
